@@ -41,7 +41,9 @@ Membres du groupe :
 
 ## Question 2
 
-[Script question 2](scripts/question2.ps1)
+**Goal : Afficher des variables**
+
+[Script question 2](https://github.com/Twiloo/PowerShell/blob/main/scripts/question2.ps1)
 
 ```powershell
 $nomUtilisateur = Read-Host -Prompt "Veuillez saisir votre prenom"
@@ -53,7 +55,9 @@ Write-Host "Bonjour $nomUtilisateur, vous avez $ageUtilisateur ans."
 
 ## Question 3
 
-[Script question 3](scripts/question3.ps1)
+**Goal : Jeu du nombre secret**
+
+[Script question 3](https://github.com/Twiloo/PowerShell/blob/main/scripts/question3.ps1)
 
 ```powershell
 $nombreSecret = Get-Random -Minimum 0 -Maximum 101
@@ -82,7 +86,9 @@ do {
 
 ## Question 4
 
-[Script question 4](scripts/question4.ps1)
+**Goal : Lancer notepad si ce n'est pas déjà fait**
+
+[Script question 4](https://github.com/Twiloo/PowerShell/blob/main/scripts/question4.ps1)
 
 ```powershell
 $notepadProcess = Get-Process -Name notepad -ErrorAction SilentlyContinue
@@ -96,3 +102,106 @@ if (-not $notepadProcess) {
 ```
 
 ## Question 5
+
+**Goal : Créer un utilisateur local administrateur et un utilisateur local non administrateur (puis les supprimer)**
+
+[Script question 5](https://github.com/Twiloo/PowerShell/blob/main/scripts/question5.ps1)
+
+```powershell
+function Test-AdminPrivileges {
+    $currentUser = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
+    $adminRole = [Security.Principal.WindowsBuiltInRole]::Administrator
+    return $currentUser.IsInRole($adminRole)
+}
+
+if (-not (Test-AdminPrivileges)) {
+    Write-Host "Le script doit etre execute en tant qu'administrateur. Veuillez relancer le script en tant qu'administrateur."
+    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    Exit
+}
+
+function Write-LocaleUserAccount {
+    param([string]$moment = "actuellement")
+    $comptesLocaux = Get-WmiObject Win32_UserAccount | Where-Object { $_.LocalAccount -eq $true }
+
+    Write-Host "Comptes utilisateurs locaux $moment :"
+    foreach ($compte in $comptesLocaux) {
+        Write-Host $compte.Name
+    }
+}
+
+function Get-SecurePassword {
+    $securePassword = Read-Host -Prompt "Entrez le mot de passe" -AsSecureString
+    return $securePassword
+}
+
+function Compare-Password {
+    param([System.Security.SecureString]$password, [System.Security.SecureString]$verifyPassword)
+    return [System.Runtime.InteropServices.Marshal]::PtrToStringAuto([System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($password)) -eq [System.Runtime.InteropServices.Marshal]::PtrToStringAuto([System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($verifyPassword))
+}
+
+function New-Account {
+    param([bool]$isAdmin = $false)
+    $login = Read-Host -Prompt "Entrez le login du nouveau compte"
+    $password = Get-SecurePassword
+    $verifyPassword = $null
+    do {
+        $verifyPassword = Get-SecurePassword
+        if (-not (Compare-Password -password $password -verifyPassword $verifyPassword)) {
+            Write-Host "Les mots de passe ne correspondent pas. Veuillez reessayer."
+        }
+    } while (-not (Compare-Password -password $password -verifyPassword $verifyPassword))
+
+    New-LocalUser -Name $login -Password $password -PasswordNeverExpires
+    if ($isAdmin) {
+        Add-LocalGroupMember -Group "Administrateurs" -Member $login
+    }
+    Write-Host "Nouveau compte $('non ' * (-not $isAdmin))administrateur '$login' cree."
+
+    return $login
+}
+
+function Remove-Account {
+    param([string]$login)
+    Remove-LocalUser -Name $login
+    Write-Host "Compte '$login' supprime."
+}
+
+Write-LocaleUserAccount
+$loginAdmin = New-Account -isAdmin $true
+Write-LocaleUserAccount "apres creation compte admin"
+$loginNonAdmin = New-Account
+Write-LocaleUserAccount "apres creation compte non admin"
+Remove-Account -login $loginAdmin
+Write-LocaleUserAccount "apres suppression compte admin"
+Remove-Account -login $loginNonAdmin
+Write-LocaleUserAccount "apres suppression compte non admin"
+```
+
+## Question 6
+
+**Goal : Trier les fichiers d'un dossier dans des dossiers par extension de fichier**
+
+[Script question 6](https://github.com/Twiloo/PowerShell/blob/main/scripts/question6.ps1)
+
+```powershell
+function Get-Folder {
+    param([String]$relativePath = "")
+    return (Join-Path -Path $PSScriptRoot -ChildPath $relativePath)
+}
+
+$folder = Get-Folder -relativePath "../files-to-sort"
+$destination = Get-Folder -relativePath "../sorted-files"
+
+$files = Get-ChildItem -Path $folder -File
+
+foreach ($file in $files) {
+    $fileExtension = $file.Extension
+    if (-not (Test-Path -Path "$destination\$fileExtension")) {
+        New-Item -Path "$destination\$fileExtension" -ItemType Directory
+    }
+    Copy-Item -Path $file.FullName -Destination "$destination\$fileExtension"
+}
+
+Write-Host "Copie terminee."
+```
