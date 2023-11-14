@@ -58,14 +58,50 @@ function Remove-Account {
     Write-Host "Compte '$($login.Split(" ")[0])' supprime."
 }
 
-Write-LocaleUserAccount
-$loginAdmin = [String] (New-Account -isAdmin $true)
-Write-Host -login $loginAdmin
-Write-LocaleUserAccount "apres creation compte admin"
-$loginNonAdmin = [String] (New-Account)
-Write-Host -login $loginNonAdmin
-Write-LocaleUserAccount "apres creation compte non admin"
-Remove-Account $loginAdmin
-Write-LocaleUserAccount "apres suppression compte admin"
-Remove-Account $loginNonAdmin
-Write-LocaleUserAccount "apres suppression compte non admin"
+function Show-Menu {
+    Write-Host "Bienvenue dans le gestionnaire de comptes utilisateurs."
+    Write-Host "Veuillez choisir une action :"
+    Write-Host "1. Creer un compte administrateur"
+    Write-Host "2. Creer un compte utilisateur"
+    Write-Host "3. Afficher les comptes utilisateurs locaux"
+    Write-Host "4. Supprimer un compte utilisateur"
+    Write-Host "5. Afficher ce menu d'aide"
+    Write-Host "6. Quitter"
+}
+
+do {
+    Show-Menu
+    $userChoice = Read-Host -Prompt "Entrez votre choix"
+    switch ($userChoice) {
+        "1" {
+            $loginAdmin = [String] (New-Account -isAdmin $true)
+            Write-Host -login $loginAdmin
+            Break
+        }
+        "2" {
+            $loginNonAdmin = [String] (New-Account)
+            Write-Host -login $loginNonAdmin
+            Break
+        }
+        "3" {
+            Write-LocaleUserAccount
+            Break
+        }
+        "4" {
+            $login = Read-Host -Prompt "Entrez le login du compte a supprimer"
+            Remove-Account $login
+            Break
+        }
+        "5" {
+            Show-Menu
+            Break
+        }
+        "6" {
+            Write-Host "Au revoir."
+            Exit
+        }
+        Default {
+            Write-Host "Choix invalide. Veuillez reessayer."
+        }
+    }
+} while ($true)

@@ -414,7 +414,7 @@ code {
 </ol>
 <h2 id="question-2">Question 2</h2>
 <p><strong>Goal : Afficher des variables</strong></p>
-<p><a href="https://github.com/Twiloo/PowerShell/blob/main/scripts/question2.ps1">Script question 2</a></p>
+<p><a href="https://github.com/CesiLyon/PowerShell/blob/main/scripts/question2.ps1">Script question 2</a></p>
 <pre class="hljs"><code><div><span class="hljs-variable">$nomUtilisateur</span> = <span class="hljs-built_in">Read-Host</span> <span class="hljs-literal">-Prompt</span> <span class="hljs-string">"Veuillez saisir votre prenom"</span>
 
 <span class="hljs-variable">$ageUtilisateur</span> = <span class="hljs-built_in">Read-Host</span> <span class="hljs-literal">-Prompt</span> <span class="hljs-string">"Veuillez saisir votre age"</span>
@@ -423,7 +423,7 @@ code {
 </div></code></pre>
 <h2 id="question-3">Question 3</h2>
 <p><strong>Goal : Jeu du nombre secret</strong></p>
-<p><a href="https://github.com/Twiloo/PowerShell/blob/main/scripts/question3.ps1">Script question 3</a></p>
+<p><a href="https://github.com/CesiLyon/PowerShell/blob/main/scripts/question3.ps1">Script question 3</a></p>
 <pre class="hljs"><code><div><span class="hljs-variable">$nombreSecret</span> = <span class="hljs-built_in">Get-Random</span> <span class="hljs-literal">-Minimum</span> <span class="hljs-number">0</span> <span class="hljs-literal">-Maximum</span> <span class="hljs-number">101</span>
 
 <span class="hljs-variable">$nombreEssais</span> = <span class="hljs-number">0</span>
@@ -449,7 +449,7 @@ code {
 </div></code></pre>
 <h2 id="question-4">Question 4</h2>
 <p><strong>Goal : Lancer notepad si ce n'est pas déjà fait</strong></p>
-<p><a href="https://github.com/Twiloo/PowerShell/blob/main/scripts/question4.ps1">Script question 4</a></p>
+<p><a href="https://github.com/CesiLyon/PowerShell/blob/main/scripts/question4.ps1">Script question 4</a></p>
 <pre class="hljs"><code><div><span class="hljs-variable">$notepadProcess</span> = <span class="hljs-built_in">Get-Process</span> <span class="hljs-literal">-Name</span> notepad <span class="hljs-literal">-ErrorAction</span> SilentlyContinue
 
 <span class="hljs-keyword">if</span> (<span class="hljs-operator">-not</span> <span class="hljs-variable">$notepadProcess</span>) {
@@ -461,7 +461,7 @@ code {
 </div></code></pre>
 <h2 id="question-5">Question 5</h2>
 <p><strong>Goal : Créer un utilisateur local administrateur et un utilisateur local non administrateur (puis les supprimer)</strong></p>
-<p><a href="https://github.com/Twiloo/PowerShell/blob/main/scripts/question5.ps1">Script question 5</a></p>
+<p><a href="https://github.com/CesiLyon/PowerShell/blob/main/scripts/question5.ps1">Script question 5</a></p>
 <pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Test-AdminPrivileges</span></span> {
     <span class="hljs-variable">$currentUser</span> = <span class="hljs-built_in">New-Object</span> Security.Principal.WindowsPrincipal([<span class="hljs-type">Security.Principal.WindowsIdentity</span>]::GetCurrent())
     <span class="hljs-variable">$adminRole</span> = [<span class="hljs-type">Security.Principal.WindowsBuiltInRole</span>]::Administrator
@@ -533,7 +533,7 @@ code {
 </div></code></pre>
 <h2 id="question-6">Question 6</h2>
 <p><strong>Goal : Trier les fichiers d'un dossier dans des dossiers par extension de fichier</strong></p>
-<p><a href="https://github.com/Twiloo/PowerShell/blob/main/scripts/question6.ps1">Script question 6</a></p>
+<p><a href="https://github.com/CesiLyon/PowerShell/blob/main/scripts/question6.ps1">Script question 6</a></p>
 <pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Get-Folder</span></span> {
     <span class="hljs-keyword">param</span>([<span class="hljs-built_in">String</span>]<span class="hljs-variable">$relativePath</span> = <span class="hljs-string">""</span>)
     <span class="hljs-keyword">return</span> (<span class="hljs-built_in">Join-Path</span> <span class="hljs-literal">-Path</span> <span class="hljs-variable">$PSScriptRoot</span> <span class="hljs-literal">-ChildPath</span> <span class="hljs-variable">$relativePath</span>)
@@ -553,6 +553,117 @@ code {
 }
 
 <span class="hljs-built_in">Write-Host</span> <span class="hljs-string">"Copie terminee."</span>
+</div></code></pre>
+<h2 id="question-7">Question 7</h2>
+<p><strong>Goal : Créer des utilisateurs de façon interactive</strong></p>
+<p><a href="https://github.com/CesiLyon/PowerShell/blob/main/scripts/question7.ps1">Script question 7</a></p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Test-AdminPrivileges</span></span> {
+    <span class="hljs-variable">$currentUser</span> = <span class="hljs-built_in">New-Object</span> Security.Principal.WindowsPrincipal([<span class="hljs-type">Security.Principal.WindowsIdentity</span>]::GetCurrent())
+    <span class="hljs-variable">$adminRole</span> = [<span class="hljs-type">Security.Principal.WindowsBuiltInRole</span>]::Administrator
+    <span class="hljs-keyword">return</span> <span class="hljs-variable">$currentUser</span>.IsInRole(<span class="hljs-variable">$adminRole</span>)
+}
+
+<span class="hljs-keyword">if</span> (<span class="hljs-operator">-not</span> (<span class="hljs-built_in">Test-AdminPrivileges</span>)) {
+    <span class="hljs-built_in">Write-Host</span> <span class="hljs-string">"Le script doit etre execute en tant qu'administrateur. Veuillez relancer le script en tant qu'administrateur."</span>
+    <span class="hljs-variable">$null</span> = <span class="hljs-variable">$Host</span>.UI.RawUI.ReadKey(<span class="hljs-string">"NoEcho,IncludeKeyDown"</span>)
+    <span class="hljs-keyword">Exit</span>
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Write-LocaleUserAccount</span></span> {
+    <span class="hljs-keyword">param</span>([<span class="hljs-built_in">String</span>]<span class="hljs-variable">$moment</span> = <span class="hljs-string">"actuellement"</span>)
+    <span class="hljs-variable">$comptesLocaux</span> = <span class="hljs-built_in">Get-WmiObject</span> Win32_UserAccount | <span class="hljs-built_in">Where-Object</span> { <span class="hljs-variable">$_</span>.LocalAccount <span class="hljs-operator">-eq</span> <span class="hljs-variable">$true</span> }
+
+    <span class="hljs-built_in">Write-Host</span> <span class="hljs-string">"Comptes utilisateurs locaux <span class="hljs-variable">$</span>(<span class="hljs-variable">$moment</span>) :"</span>
+    <span class="hljs-keyword">foreach</span> (<span class="hljs-variable">$compte</span> <span class="hljs-keyword">in</span> <span class="hljs-variable">$comptesLocaux</span>) {
+        <span class="hljs-built_in">Write-Host</span> <span class="hljs-variable">$compte</span>.Name
+    }
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Get-SecurePassword</span></span> {
+    <span class="hljs-keyword">param</span>([<span class="hljs-built_in">String</span>]<span class="hljs-variable">$compte</span>)
+    <span class="hljs-variable">$securePassword</span> = <span class="hljs-built_in">Read-Host</span> <span class="hljs-literal">-Prompt</span> <span class="hljs-string">"Entrez le mot de passe pour '<span class="hljs-variable">$</span>(<span class="hljs-variable">$compte</span>)'"</span> <span class="hljs-literal">-AsSecureString</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-variable">$securePassword</span>
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Compare-Password</span></span> {
+    <span class="hljs-keyword">param</span>([<span class="hljs-type">System.Security.SecureString</span>]<span class="hljs-variable">$password</span>, [<span class="hljs-type">System.Security.SecureString</span>]<span class="hljs-variable">$verifyPassword</span>)
+    <span class="hljs-keyword">return</span> [<span class="hljs-type">System.Runtime.InteropServices.Marshal</span>]::PtrToStringAuto([<span class="hljs-type">System.Runtime.InteropServices.Marshal</span>]::SecureStringToBSTR(<span class="hljs-variable">$password</span>)) <span class="hljs-operator">-eq</span> [<span class="hljs-type">System.Runtime.InteropServices.Marshal</span>]::PtrToStringAuto([<span class="hljs-type">System.Runtime.InteropServices.Marshal</span>]::SecureStringToBSTR(<span class="hljs-variable">$verifyPassword</span>))
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">New-Account</span></span> {
+    <span class="hljs-keyword">param</span>([<span class="hljs-built_in">bool</span>]<span class="hljs-variable">$isAdmin</span> = <span class="hljs-variable">$false</span>)
+    <span class="hljs-variable">$login</span> = <span class="hljs-built_in">Read-Host</span> <span class="hljs-literal">-Prompt</span> <span class="hljs-string">"Entrez le login du nouveau compte <span class="hljs-variable">$</span>('non ' * (-not <span class="hljs-variable">$isAdmin</span>))administrateur"</span>
+    <span class="hljs-variable">$password</span> = <span class="hljs-built_in">Get-SecurePassword</span> <span class="hljs-variable">$login</span>
+    <span class="hljs-variable">$verifyPassword</span> = <span class="hljs-variable">$null</span>
+    <span class="hljs-keyword">do</span> {
+        <span class="hljs-variable">$verifyPassword</span> = <span class="hljs-built_in">Get-SecurePassword</span> <span class="hljs-variable">$login</span>
+        <span class="hljs-keyword">if</span> (<span class="hljs-operator">-not</span> (<span class="hljs-built_in">Compare-Password</span> <span class="hljs-literal">-password</span> <span class="hljs-variable">$password</span> <span class="hljs-literal">-verifyPassword</span> <span class="hljs-variable">$verifyPassword</span>)) {
+            <span class="hljs-built_in">Write-Host</span> <span class="hljs-string">"Les mots de passe ne correspondent pas. Veuillez reessayer."</span>
+        }
+    } <span class="hljs-keyword">while</span> (<span class="hljs-operator">-not</span> (<span class="hljs-built_in">Compare-Password</span> <span class="hljs-literal">-password</span> <span class="hljs-variable">$password</span> <span class="hljs-literal">-verifyPassword</span> <span class="hljs-variable">$verifyPassword</span>))
+
+    <span class="hljs-built_in">New-LocalUser</span> <span class="hljs-variable">$login</span> <span class="hljs-literal">-password</span> <span class="hljs-variable">$password</span> <span class="hljs-literal">-PasswordNeverExpires</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable">$isAdmin</span>) {
+        <span class="hljs-built_in">Add-LocalGroupMember</span> <span class="hljs-string">"Administrateurs"</span> <span class="hljs-variable">$login</span>
+    }
+    <span class="hljs-built_in">Write-Host</span> <span class="hljs-string">"Nouveau compte <span class="hljs-variable">$</span>('non ' * (-not <span class="hljs-variable">$isAdmin</span>))administrateur '<span class="hljs-variable">$</span>(<span class="hljs-variable">$login</span>)' cree."</span>
+
+    <span class="hljs-keyword">return</span> <span class="hljs-variable">$login</span>
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Remove-Account</span></span> {
+    <span class="hljs-keyword">param</span>([<span class="hljs-built_in">String</span>]<span class="hljs-variable">$login</span>)
+    <span class="hljs-built_in">Remove-LocalUser</span> <span class="hljs-literal">-Name</span> <span class="hljs-variable">$login</span>.Split(<span class="hljs-string">" "</span>)[<span class="hljs-number">0</span>]
+    <span class="hljs-built_in">Write-Host</span> <span class="hljs-string">"Compte '<span class="hljs-variable">$</span>(<span class="hljs-variable">$login</span>.Split("</span> <span class="hljs-string">")[0])' supprime."</span>
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Show-Menu</span></span> {
+    <span class="hljs-built_in">Write-Host</span> <span class="hljs-string">"Bienvenue dans le gestionnaire de comptes utilisateurs."</span>
+    <span class="hljs-built_in">Write-Host</span> <span class="hljs-string">"Veuillez choisir une action :"</span>
+    <span class="hljs-built_in">Write-Host</span> <span class="hljs-string">"1. Creer un compte administrateur"</span>
+    <span class="hljs-built_in">Write-Host</span> <span class="hljs-string">"2. Creer un compte utilisateur"</span>
+    <span class="hljs-built_in">Write-Host</span> <span class="hljs-string">"3. Afficher les comptes utilisateurs locaux"</span>
+    <span class="hljs-built_in">Write-Host</span> <span class="hljs-string">"4. Supprimer un compte utilisateur"</span>
+    <span class="hljs-built_in">Write-Host</span> <span class="hljs-string">"5. Afficher ce menu d'aide"</span>
+    <span class="hljs-built_in">Write-Host</span> <span class="hljs-string">"6. Quitter"</span>
+}
+
+<span class="hljs-keyword">do</span> {
+    <span class="hljs-built_in">Show-Menu</span>
+    <span class="hljs-variable">$userChoice</span> = <span class="hljs-built_in">Read-Host</span> <span class="hljs-literal">-Prompt</span> <span class="hljs-string">"Entrez votre choix"</span>
+    <span class="hljs-keyword">switch</span> (<span class="hljs-variable">$userChoice</span>) {
+        <span class="hljs-string">"1"</span> {
+            <span class="hljs-variable">$loginAdmin</span> = [<span class="hljs-built_in">String</span>] (<span class="hljs-built_in">New-Account</span> <span class="hljs-literal">-isAdmin</span> <span class="hljs-variable">$true</span>)
+            <span class="hljs-built_in">Write-Host</span> <span class="hljs-literal">-login</span> <span class="hljs-variable">$loginAdmin</span>
+            <span class="hljs-keyword">Break</span>
+        }
+        <span class="hljs-string">"2"</span> {
+            <span class="hljs-variable">$loginNonAdmin</span> = [<span class="hljs-built_in">String</span>] (<span class="hljs-built_in">New-Account</span>)
+            <span class="hljs-built_in">Write-Host</span> <span class="hljs-literal">-login</span> <span class="hljs-variable">$loginNonAdmin</span>
+            <span class="hljs-keyword">Break</span>
+        }
+        <span class="hljs-string">"3"</span> {
+            <span class="hljs-built_in">Write-LocaleUserAccount</span>
+            <span class="hljs-keyword">Break</span>
+        }
+        <span class="hljs-string">"4"</span> {
+            <span class="hljs-variable">$login</span> = <span class="hljs-built_in">Read-Host</span> <span class="hljs-literal">-Prompt</span> <span class="hljs-string">"Entrez le login du compte a supprimer"</span>
+            <span class="hljs-built_in">Remove-Account</span> <span class="hljs-variable">$login</span>
+            <span class="hljs-keyword">Break</span>
+        }
+        <span class="hljs-string">"5"</span> {
+            <span class="hljs-built_in">Show-Menu</span>
+            <span class="hljs-keyword">Break</span>
+        }
+        <span class="hljs-string">"6"</span> {
+            <span class="hljs-built_in">Write-Host</span> <span class="hljs-string">"Au revoir."</span>
+            <span class="hljs-keyword">Exit</span>
+        }
+        Default {
+            <span class="hljs-built_in">Write-Host</span> <span class="hljs-string">"Choix invalide. Veuillez reessayer."</span>
+        }
+    }
+} <span class="hljs-keyword">while</span> (<span class="hljs-variable">$true</span>)
 </div></code></pre>
 
 </body>
